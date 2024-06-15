@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,14 +19,29 @@ use App\Http\Controllers\Dashboard\DashboardController;
 // Route::get('/', function () {
 //     return view('dashboard.index');
 // });
-Route::get('/DashboardAdmin',[DashboardController::class,'index']);
+Route::get('/DashboardAdmin', [DashboardController::class, 'index']);
 
-Route::get('/dashboard/user', function () {
-    return view('dashboard.user.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard.user');
-Route::get('/dashboard/admin', function () {
-    return view('dashboard.admin.dashboard');
-})->middleware(['auth:admin', 'verified'])->name('dashboard.admin');
+
+
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+    ],
+    function () { //...
+        Route::get('/dashboard/user', function () {
+            return view('dashboard.user.dashboard');
+        })->middleware(['auth', 'verified'])->name('dashboard.user');
+        Route::get('/dashboard/admin', function () {
+            return view('dashboard.admin.dashboard');
+        })->middleware(['auth:admin', 'verified'])->name('dashboard.admin');
+        require __DIR__ . '/auth.php';
+    }
+);
+
+
+
+
 
 // Route::middleware('auth')->group(function () {
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -33,4 +49,3 @@ Route::get('/dashboard/admin', function () {
 //     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // });
 
-require __DIR__.'/auth.php';

@@ -33,11 +33,22 @@ class AdminController extends Controller
      */
     public function store(AdminLoginRequest $request)
     {
-        $request->authenticate();
 
-        $request->session()->regenerate();
+if($request->authenticate()){
+    $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::ADMIN);
+    return redirect()->intended(RouteServiceProvider::ADMIN);
+
+}
+// return redirect()->back()->withErrors(['name'=>'يوجد خطأ في كلمة المرور او اسم المستخدم ']);
+return redirect()->back()->withErrors(['name' => __('dashboard/auth.failed')]);
+
+
+        // $request->authenticate();
+
+        // $request->session()->regenerate();
+
+        // return redirect()->intended(RouteServiceProvider::ADMIN);
        }
 
     /**

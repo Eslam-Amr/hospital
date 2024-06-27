@@ -11,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('section_translations', function (Blueprint $table) {
-       // mandatory fields
-       $table->id();
-       $table->string('locale')->index();
-
-            // Foreign key to the main model
-            // $table->unsignedBigInteger('section_id');
-            $table->unique(['section_id', 'locale']);
+        Schema::create('doctors', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
             $table->foreignId('section_id')->references('id')->on('sections')->onDelete('cascade');
-
-
-       // Actual fields you want to translate
-       $table->string('name');
+            $table->string('phone');
+            $table->decimal('price',8,2);
+            $table->boolean('status')->default(1);
+            $table->timestamps();
         });
     }
 
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('section_translations');
+        Schema::dropIfExists('doctor');
     }
 };

@@ -14,4 +14,5 @@ class Section extends Model implements TranslatableContract
 
     // 3. To define which attributes needs to be translated
     public $translatedAttributes = ['name'];
+    protected $fillable=['name'];
 }
